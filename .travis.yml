@@ -1,0 +1,21 @@
+language: python
+python:
+  - "3.5"
+  - "3.6"
+
+# command to install dependencies
+install:
+  - "pip install -qq pytest"
+  - "pip install -qq pytest-cov"
+  - "pip install -qq flake8"
+  - "pip install coveralls --quiet"
+  - "pip install ."
+
+# command to run tests
+script:
+  - py.test -s --cov=lms_tools --cov-report xml:/tmp/cov-lms_tools.xml --junitxml=/tmp/lms_tools.xml
+  - flake8 --version
+  - flake8 --ignore E501 lms_tools tests
+
+after_success:
+  - coveralls

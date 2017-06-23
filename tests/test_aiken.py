@@ -1,0 +1,133 @@
+from lms_tools.aiken import AikenQuiz, AikenQuestion
+from lms_tools.gift import GiftQuestion, GiftDistractor
+
+
+def test_aiken_question():
+    stem = "L'appareil servant à mesurer la vitesse du vent au sol s'appelle :"
+    distractors = ["une girouette.", "une rose des vents.", "un baromètre.", "un anémomètre."]
+    correct_answer = 3
+    question = AikenQuestion(stem, distractors, correct_answer)
+    assert question.stem == stem
+    assert question.distractors == distractors
+    assert question.correct_answer == correct_answer
+
+
+def test_aiken_question_stream():
+    stem = "L'appareil servant à mesurer la vitesse du vent au sol s'appelle :"
+    distractors = ["une girouette.", "une rose des vents.", "un baromètre.", "un anémomètre."]
+    correct_answer = 3
+
+    question = AikenQuestion()
+    question.append_stem(stem)
+    question.append_distractor(distractors[0])
+    question.append_distractor(distractors[1])
+    question.append_distractor(distractors[2])
+    question.append_distractor(distractors[3])
+    question.set_correct_answer(correct_answer)
+
+    assert question.stem == stem
+    assert question.distractors == distractors
+    assert question.correct_answer == correct_answer
+
+
+def test_aiken_question_to_string():
+    q = AikenQuestion("L'appareil servant à mesurer la vitesse du vent au sol s'appelle :",
+                      ["une girouette.", "une rose des vents.", "un baromètre.", "un anémomètre."], 3)
+    txt = """L'appareil servant à mesurer la vitesse du vent au sol s'appelle :
+A) une girouette.
+B) une rose des vents.
+C) un baromètre.
+D) un anémomètre.
+ANSWER: D"""
+    assert q.to_string() == txt
+
+
+def test_aiken_question_parse():
+    s = """L'appareil servant à mesurer la vitesse du vent au sol s'appelle :
+A) une girouette.
+B) une rose des vents.
+C) un baromètre.
+D) un anémomètre.
+ANSWER: D"""
+    question = AikenQuestion.parse(s)
+    assert question.stem == "L'appareil servant à mesurer la vitesse du vent au sol s'appelle :"
+
+
+def test_aiken_quiz():
+    q1 = AikenQuestion("L'appareil servant à mesurer la vitesse du vent au sol s'appelle :",
+                       ["une girouette.", "une rose des vents.", "un baromètre.", "un anémomètre."], 3)
+    q2 = AikenQuestion("L'unité de pression utilisée dans le système international et en aéronautique est :",
+                       ["le pascal.", "le newton.", "le joule.", "le millimètre de mercure."], 0)
+    quiz = AikenQuiz([q1, q2])
+    assert len(quiz) == 2
+
+
+def test_aiken_quiz_stream():
+    quiz = AikenQuiz()
+    q1 = AikenQuestion("L'appareil servant à mesurer la vitesse du vent au sol s'appelle :",
+                       ["une girouette.", "une rose des vents.", "un baromètre.", "un anémomètre."], 3)
+    quiz.append(q1)
+    q2 = AikenQuestion("L'unité de pression utilisée dans le système international et en aéronautique est :",
+                       ["le pascal.", "le newton.", "le joule.", "le millimètre de mercure."], 0)
+    quiz.append(q2)
+    assert len(quiz) == 2
+
+
+def test_aiken_quiz_to_string():
+    q1 = AikenQuestion("L'appareil servant à mesurer la vitesse du vent au sol s'appelle :",
+                       ["une girouette.", "une rose des vents.", "un baromètre.", "un anémomètre."], 3)
+    q2 = AikenQuestion("L'unité de pression utilisée dans le système international et en aéronautique est :",
+                       ["le pascal.", "le newton.", "le joule.", "le millimètre de mercure."], 0)
+    quiz = AikenQuiz([q1, q2])
+    txt = """L'appareil servant à mesurer la vitesse du vent au sol s'appelle :
+A) une girouette.
+B) une rose des vents.
+C) un baromètre.
+D) un anémomètre.
+ANSWER: D
+
+L'unité de pression utilisée dans le système international et en aéronautique est :
+A) le pascal.
+B) le newton.
+C) le joule.
+D) le millimètre de mercure.
+ANSWER: A"""
+    assert quiz.to_string() == txt
+
+
+def test_aiken_quiz_parse():
+    txt = """L'appareil servant à mesurer la vitesse du vent au sol s'appelle :
+A) une girouette.
+B) une rose des vents.
+C) un baromètre.
+D) un anémomètre.
+ANSWER: D
+
+L'unité de pression utilisée dans le système international et en aéronautique est :
+A) le pascal.
+B) le newton.
+C) le joule.
+D) le millimètre de mercure.
+ANSWER: A"""
+    quiz = AikenQuiz.parse(txt)
+    assert len(quiz) == 2
+    assert quiz.to_string() == txt
+
+
+def test_aiken_question_from_gift_question():
+    stem = "L'appareil servant à mesurer la vitesse du vent au sol s'appelle :"
+    q = GiftQuestion(stem, name="0001")
+    q.append_distractor(GiftDistractor("une girouette.", 0))
+    q.append_distractor(GiftDistractor("une rose des vents.", 0))
+    q.append_distractor(GiftDistractor("un baromètre.", 0))
+    q.append_distractor(GiftDistractor("un anémomètre.", 1))
+    assert q.is_binary()
+    aiken_question = AikenQuestion.from_gift(q)
+    assert isinstance(aiken_question, AikenQuestion)
+    assert q.stem == aiken_question.stem
+    assert len(aiken_question) == len(q)
+    assert aiken_question.is_correct_answer(3)
+
+
+def test_aiken_quiz_from_gift_quiz():
+    pass
