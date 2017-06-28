@@ -87,4 +87,14 @@ class GiftQuiz(Quiz):
 
     @classmethod
     def from_aiken(cls, aiken_quiz):
-        raise NotImplementedError
+        gift_quiz = GiftQuiz()
+        for i, aiken_question in enumerate(aiken_quiz.iter_questions()):
+            gift_question = GiftQuestion(aiken_question.stem)
+            for j, distractor in enumerate(aiken_question.iter_distractors()):
+                if j == aiken_question.correct_answer:
+                    value = 1
+                else:
+                    value = 0
+                gift_question.append_distractor(GiftDistractor(distractor, value))
+            gift_quiz.append(gift_question)
+        return gift_quiz

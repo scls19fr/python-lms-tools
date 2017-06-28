@@ -1,6 +1,5 @@
 from lms_tools.aiken import AikenQuiz, AikenQuestion
 from lms_tools.gift import GiftQuiz, GiftQuestion, GiftDistractor
-from lms_tools.gift._utils import aiken2gift
 
 
 def test_gift_question_to_string():
@@ -114,9 +113,12 @@ C) le joule.
 D) le millimètre de mercure.
 ANSWER: A"""
     aiken_quiz = AikenQuiz.parse(aiken_txt)
-    # gift_quiz = GiftQuiz.from_aiken(aiken_quiz)  # ToDo
-    # gift_text = gift_quiz.to_string()  # ToDo
-    gift_text = aiken2gift(aiken_quiz)
+    gift_quiz = GiftQuiz.from_aiken(aiken_quiz)
+    for i, question in enumerate(gift_quiz.iter_questions()):
+        val = i + 1
+        question.comment = "question: %d name: %04d" % (val, val)
+        question.name = "%04d" % val
+    gift_text = gift_quiz.to_string()
     expected_gift_text = """// question: 1 name: 0001
 ::0001::L'appareil servant à mesurer la vitesse du vent au sol s'appelle \:{
 \t~une girouette.
