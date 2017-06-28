@@ -165,7 +165,7 @@ def test_gift_quiz_join():
     q.append_distractor(GiftDistractor("le joule.", 0))
     q.append_distractor(GiftDistractor("le millimètre de mercure.", 0))
     quiz1.append(q)
-    
+
     quiz2 = GiftQuiz()
     q = GiftQuestion("En vol en palier stabilisé :", name="0003", comment="question: 3 name: 0003")
     q.append_distractor(GiftDistractor("la portance équilibre le poids.", 1))
