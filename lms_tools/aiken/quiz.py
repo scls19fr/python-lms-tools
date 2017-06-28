@@ -135,8 +135,8 @@ class AikenQuiz(Quiz):
     def from_gift(cls, gift_quiz):
         if not gift_quiz.is_binary():
             raise NotImplementedError("GIFT quiz must have binaries questions")
-        quiz = AikenQuiz()
+        aiken_quiz = AikenQuiz()
         for i, gift_question in enumerate(gift_quiz.iter_questions()):
             aiken_question = AikenQuestion.from_gift(gift_question)
-            quiz.append(aiken_question)
-        return quiz
+            aiken_quiz.append(aiken_question)
+        return aiken_quiz
