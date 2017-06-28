@@ -147,5 +147,5 @@ def test_aiken_quiz_from_gift_quiz():
     gift_quiz.append(q)
 
     aiken_quiz = AikenQuiz.from_gift(gift_quiz)
-    
+
     assert len(aiken_quiz) == len(gift_quiz)
