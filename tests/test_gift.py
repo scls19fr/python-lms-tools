@@ -65,7 +65,17 @@ def test_gift_quiz():
 
     assert len(quiz) == 2
 
-    expected_gift_text = """// question: 1 name: 0001
+    header = """// question: 0  name: Switch category to $module$/Défaut pour BIA 2016 Météorologie et aérologie
+$CATEGORY: $module$/Défaut pour BIA 2016 Météorologie et aérologie
+"""
+
+    footer = """
+// end of quiz"""
+
+    expected_gift_text = """// question: 0  name: Switch category to $module$/Défaut pour BIA 2016 Météorologie et aérologie
+$CATEGORY: $module$/Défaut pour BIA 2016 Météorologie et aérologie
+
+// question: 1 name: 0001
 ::0001::L'appareil servant à mesurer la vitesse du vent au sol s'appelle \:{
 \t~une girouette.
 \t~une rose des vents.
@@ -79,8 +89,10 @@ def test_gift_quiz():
 \t~le newton.
 \t~le joule.
 \t~le millimètre de mercure.
-}"""
-    assert quiz.to_string() == expected_gift_text
+}
+
+// end of quiz"""
+    assert quiz.to_string(header=header, footer=footer) == expected_gift_text
 
 
 def test_aiken_question_to_gift_question():
