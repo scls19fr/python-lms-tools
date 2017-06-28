@@ -85,6 +85,12 @@ class GiftQuiz(Quiz):
         s = formatter.to_string(self, header, footer)
         return s
 
+    def is_binary(self):
+        for question in self.iter_questions():
+            if not question.is_binary():
+                return False
+        return True
+
     @classmethod
     def from_aiken(cls, aiken_quiz):
         gift_quiz = GiftQuiz()

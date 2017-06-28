@@ -147,3 +147,4 @@ ANSWER: A"""
 \t~le millimètre de mercure.
 }"""
     assert expected_gift_text == gift_text
+    assert len(aiken_quiz) == len(gift_quiz)

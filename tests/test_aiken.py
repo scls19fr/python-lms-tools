@@ -1,5 +1,5 @@
 from lms_tools.aiken import AikenQuiz, AikenQuestion
-from lms_tools.gift import GiftQuestion, GiftDistractor
+from lms_tools.gift import GiftQuiz, GiftQuestion, GiftDistractor
 
 
 def test_aiken_question():
@@ -130,4 +130,22 @@ def test_aiken_question_from_gift_question():
 
 
 def test_aiken_quiz_from_gift_quiz():
-    pass
+    gift_quiz = GiftQuiz()
+
+    q = GiftQuestion("L'appareil servant à mesurer la vitesse du vent au sol s'appelle :", name="0001", comment="question: 1 name: 0001")
+    q.append_distractor(GiftDistractor("une girouette.", 0))
+    q.append_distractor(GiftDistractor("une rose des vents.", 0))
+    q.append_distractor(GiftDistractor("un baromètre.", 0))
+    q.append_distractor(GiftDistractor("un anémomètre.", 1))
+    gift_quiz.append(q)
+
+    q = GiftQuestion("L'unité de pression utilisée dans le système international et en aéronautique est :", name="0002", comment="question: 2 name: 0002")
+    q.append_distractor(GiftDistractor("le pascal.", 1))
+    q.append_distractor(GiftDistractor("le newton.", 0))
+    q.append_distractor(GiftDistractor("le joule.", 0))
+    q.append_distractor(GiftDistractor("le millimètre de mercure.", 0))
+    gift_quiz.append(q)
+
+    aiken_quiz = AikenQuiz.from_gift(gift_quiz)
+    
+    assert len(aiken_quiz) == len(gift_quiz)
