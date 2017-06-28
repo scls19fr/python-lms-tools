@@ -111,7 +111,7 @@ def test_aiken_question_to_gift_question():
 
 
 def test_aiken_quiz_to_gift_quiz():
-    aiken_txt = """L'appareil servant à mesurer la vitesse du vent au sol s'appelle :
+    aiken_text = """L'appareil servant à mesurer la vitesse du vent au sol s'appelle :
 A) une girouette.
 B) une rose des vents.
 C) un baromètre.
@@ -124,7 +124,7 @@ B) le newton.
 C) le joule.
 D) le millimètre de mercure.
 ANSWER: A"""
-    aiken_quiz = AikenQuiz.parse(aiken_txt)
+    aiken_quiz = AikenQuiz.parse(aiken_text)
     gift_quiz = GiftQuiz.from_aiken(aiken_quiz)
     for i, question in enumerate(gift_quiz.iter_questions()):
         val = i + 1
@@ -148,3 +148,71 @@ ANSWER: A"""
 }"""
     assert expected_gift_text == gift_text
     assert len(aiken_quiz) == len(gift_quiz)
+
+
+def test_gift_quiz_join():
+    quiz1 = GiftQuiz()
+    q = GiftQuestion("L'appareil servant à mesurer la vitesse du vent au sol s'appelle :", name="0001", comment="question: 1 name: 0001")
+    q.append_distractor(GiftDistractor("une girouette.", 0))
+    q.append_distractor(GiftDistractor("une rose des vents.", 0))
+    q.append_distractor(GiftDistractor("un baromètre.", 0))
+    q.append_distractor(GiftDistractor("un anémomètre.", 1))
+    quiz1.append(q)
+
+    q = GiftQuestion("L'unité de pression utilisée dans le système international et en aéronautique est :", name="0002", comment="question: 2 name: 0002")
+    q.append_distractor(GiftDistractor("le pascal.", 1))
+    q.append_distractor(GiftDistractor("le newton.", 0))
+    q.append_distractor(GiftDistractor("le joule.", 0))
+    q.append_distractor(GiftDistractor("le millimètre de mercure.", 0))
+    quiz1.append(q)
+    
+    quiz2 = GiftQuiz()
+    q = GiftQuestion("En vol en palier stabilisé :", name="0003", comment="question: 3 name: 0003")
+    q.append_distractor(GiftDistractor("la portance équilibre le poids.", 1))
+    q.append_distractor(GiftDistractor("la portance équilibre la traînée.", 0))
+    q.append_distractor(GiftDistractor("la portance équilibre la résultante aérodynamique.", 0))
+    q.append_distractor(GiftDistractor("la portance équilibre la force de propulsion.", 0))
+    quiz2.append(q)
+
+    q = GiftQuestion("Le vent relatif :", name="0004", comment="question: 4 name: 0004")
+    q.append_distractor(GiftDistractor("est la composante du vent réel parallèle à la trajectoire.", 0))
+    q.append_distractor(GiftDistractor("est parallèle à la trajectoire, et de même sens que le déplacement de l'avion.", 0))
+    q.append_distractor(GiftDistractor("est parallèle à la trajectoire, mais de sens opposé au déplacement de l'avion.", 1))
+    q.append_distractor(GiftDistractor("est la composante du vent réel perpendiculaire à la trajectoire.", 0))
+    quiz2.append(q)
+
+    quiz_result = GiftQuiz.join([quiz1, quiz2])
+
+    expected_text = """// question: 1 name: 0001
+::0001::L'appareil servant à mesurer la vitesse du vent au sol s'appelle \:{
+\t~une girouette.
+\t~une rose des vents.
+\t~un baromètre.
+\t=un anémomètre.
+}
+
+// question: 2 name: 0002
+::0002::L'unité de pression utilisée dans le système international et en aéronautique est \:{
+\t=le pascal.
+\t~le newton.
+\t~le joule.
+\t~le millimètre de mercure.
+}
+
+// question: 3 name: 0003
+::0003::En vol en palier stabilisé \:{
+\t=la portance équilibre le poids.
+\t~la portance équilibre la traînée.
+\t~la portance équilibre la résultante aérodynamique.
+\t~la portance équilibre la force de propulsion.
+}
+
+// question: 4 name: 0004
+::0004::Le vent relatif \:{
+\t~est la composante du vent réel parallèle à la trajectoire.
+\t~est parallèle à la trajectoire, et de même sens que le déplacement de l'avion.
+\t=est parallèle à la trajectoire, mais de sens opposé au déplacement de l'avion.
+\t~est la composante du vent réel perpendiculaire à la trajectoire.
+}"""
+    assert len(quiz_result) == 4
+    assert quiz_result.to_string() == expected_text

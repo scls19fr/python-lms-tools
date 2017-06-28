@@ -33,13 +33,13 @@ def test_aiken_question_stream():
 def test_aiken_question_to_string():
     q = AikenQuestion("L'appareil servant à mesurer la vitesse du vent au sol s'appelle :",
                       ["une girouette.", "une rose des vents.", "un baromètre.", "un anémomètre."], 3)
-    txt = """L'appareil servant à mesurer la vitesse du vent au sol s'appelle :
+    text = """L'appareil servant à mesurer la vitesse du vent au sol s'appelle :
 A) une girouette.
 B) une rose des vents.
 C) un baromètre.
 D) un anémomètre.
 ANSWER: D"""
-    assert q.to_string() == txt
+    assert q.to_string() == text
 
 
 def test_aiken_question_parse():
@@ -79,7 +79,7 @@ def test_aiken_quiz_to_string():
     q2 = AikenQuestion("L'unité de pression utilisée dans le système international et en aéronautique est :",
                        ["le pascal.", "le newton.", "le joule.", "le millimètre de mercure."], 0)
     quiz = AikenQuiz([q1, q2])
-    txt = """L'appareil servant à mesurer la vitesse du vent au sol s'appelle :
+    text = """L'appareil servant à mesurer la vitesse du vent au sol s'appelle :
 A) une girouette.
 B) une rose des vents.
 C) un baromètre.
@@ -92,11 +92,11 @@ B) le newton.
 C) le joule.
 D) le millimètre de mercure.
 ANSWER: A"""
-    assert quiz.to_string() == txt
+    assert quiz.to_string() == text
 
 
 def test_aiken_quiz_parse():
-    txt = """L'appareil servant à mesurer la vitesse du vent au sol s'appelle :
+    text = """L'appareil servant à mesurer la vitesse du vent au sol s'appelle :
 A) une girouette.
 B) une rose des vents.
 C) un baromètre.
@@ -109,9 +109,9 @@ B) le newton.
 C) le joule.
 D) le millimètre de mercure.
 ANSWER: A"""
-    quiz = AikenQuiz.parse(txt)
+    quiz = AikenQuiz.parse(text)
     assert len(quiz) == 2
-    assert quiz.to_string() == txt
+    assert quiz.to_string() == text
 
 
 def test_aiken_question_from_gift_question():
@@ -149,3 +149,66 @@ def test_aiken_quiz_from_gift_quiz():
     aiken_quiz = AikenQuiz.from_gift(gift_quiz)
 
     assert len(aiken_quiz) == len(gift_quiz)
+
+
+def test_aiken_quiz_join():
+    text1 = """L'appareil servant à mesurer la vitesse du vent au sol s'appelle :
+A) une girouette.
+B) une rose des vents.
+C) un baromètre.
+D) un anémomètre.
+ANSWER: D
+
+L'unité de pression utilisée dans le système international et en aéronautique est :
+A) le pascal.
+B) le newton.
+C) le joule.
+D) le millimètre de mercure.
+ANSWER: A"""
+    quiz1 = AikenQuiz.parse(text1)
+
+    text2 = """En vol en palier stabilisé :
+A) la portance équilibre le poids.
+B) la portance équilibre la traînée.
+C) la portance équilibre la résultante aérodynamique.
+D) la portance équilibre la force de propulsion.
+ANSWER: A
+
+Le vent relatif :
+A) est la composante du vent réel parallèle à la trajectoire.
+B) est parallèle à la trajectoire, et de même sens que le déplacement de l'avion.
+C) est parallèle à la trajectoire, mais de sens opposé au déplacement de l'avion.
+D) est la composante du vent réel perpendiculaire à la trajectoire.
+ANSWER: C"""
+    quiz2 = AikenQuiz.parse(text2)
+    quiz_result = AikenQuiz.join([quiz1, quiz2])
+
+    expected_text = """L'appareil servant à mesurer la vitesse du vent au sol s'appelle :
+A) une girouette.
+B) une rose des vents.
+C) un baromètre.
+D) un anémomètre.
+ANSWER: D
+
+L'unité de pression utilisée dans le système international et en aéronautique est :
+A) le pascal.
+B) le newton.
+C) le joule.
+D) le millimètre de mercure.
+ANSWER: A
+
+En vol en palier stabilisé :
+A) la portance équilibre le poids.
+B) la portance équilibre la traînée.
+C) la portance équilibre la résultante aérodynamique.
+D) la portance équilibre la force de propulsion.
+ANSWER: A
+
+Le vent relatif :
+A) est la composante du vent réel parallèle à la trajectoire.
+B) est parallèle à la trajectoire, et de même sens que le déplacement de l'avion.
+C) est parallèle à la trajectoire, mais de sens opposé au déplacement de l'avion.
+D) est la composante du vent réel perpendiculaire à la trajectoire.
+ANSWER: C"""
+    assert len(quiz_result) == 4
+    assert quiz_result.to_string() == expected_text

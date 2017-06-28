@@ -13,4 +13,10 @@ class Question():
 
 
 class Quiz():
-    pass
+    @classmethod
+    def join(cls, lst_quiz):
+        quiz_result = cls()
+        for quiz in lst_quiz:
+            for question in quiz.iter_questions():
+                quiz_result.append(question)
+        return quiz_result
