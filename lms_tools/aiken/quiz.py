@@ -73,7 +73,7 @@ class AikenQuiz(Quiz):
     def to_string(self, header="", footer="", formatter=None):
         if formatter is None:
             formatter = self._default_formatter
-        s = formatter.to_string(self, header="", footer="", )
+        s = formatter.to_string(self, header="", footer="")
         return s
 
     @classmethod

@@ -79,10 +79,10 @@ class GiftQuiz(Quiz):
     def __len__(self):
         return len(self._lst_questions)
 
-    def to_string(self, formatter=None):
+    def to_string(self, header="", footer="", formatter=None):
         if formatter is None:
             formatter = self._default_formatter
-        s = formatter.to_string(self)
+        s = formatter.to_string(self, header, footer)
         return s
 
     @classmethod
