@@ -105,6 +105,9 @@ class GiftQuiz(Quiz):
             gift_quiz.append(gift_question)
         return gift_quiz
 
+    def to_xml(self, *args, **kwargs):
+        return self.to_xml_moodle(*args, **kwargs)
+
     def to_xml_moodle(self, category='', shuffleanswers=False):
         from yattag import Doc, indent
 
