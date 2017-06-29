@@ -216,3 +216,76 @@ def test_gift_quiz_join():
 }"""
     assert len(quiz_result) == 4
     assert quiz_result.to_string() == expected_text
+
+def test_to_xml():
+    quiz = GiftQuiz()
+    q = GiftQuestion("L'appareil servant à mesurer la vitesse du vent au sol s'appelle :", name="0001", comment="question: 1 name: 0001")
+    q.append_distractor(GiftDistractor("une girouette.", 0))
+    q.append_distractor(GiftDistractor("une rose des vents.", 0))
+    q.append_distractor(GiftDistractor("un baromètre.", 0))
+    q.append_distractor(GiftDistractor("un anémomètre.", 1))
+    quiz.append(q)
+
+    q = GiftQuestion("L'unité de pression utilisée dans le système international et en aéronautique est :", name="0002", comment="question: 2 name: 0002")
+    q.append_distractor(GiftDistractor("le pascal.", 1))
+    q.append_distractor(GiftDistractor("le newton.", 0))
+    q.append_distractor(GiftDistractor("le joule.", 0))
+    q.append_distractor(GiftDistractor("le millimètre de mercure.", 0))
+    quiz.append(q)
+
+    assert len(quiz) == 2
+
+    xml_text = quiz.to_xml_moodle(category='$module$/Défaut pour BIA 2016 Météorologie et aérologie')
+    
+    expected_xml_text = """<?xml version="1.0" encoding="UTF-8"?>
+<quiz>
+  <question type="category">
+    <category>
+      <text>$module$/Défaut pour BIA 2016 Météorologie et aérologie</text>
+    </category>
+  </question>
+</quiz>
+<question type="multichoice">
+  <name>
+    <text>0001</text>
+  </name>
+  <questiontext>
+    <text>L'appareil servant à mesurer la vitesse du vent au sol s'appelle :</text>
+  </questiontext>
+  <shuffleanswers>false</shuffleanswers>
+  <answer fraction="0">
+    <text>une girouette.</text>
+  </answer>
+  <answer fraction="0">
+    <text>une rose des vents.</text>
+  </answer>
+  <answer fraction="0">
+    <text>un baromètre.</text>
+  </answer>
+  <answer fraction="100">
+    <text>un anémomètre.</text>
+  </answer>
+</question>
+<question type="multichoice">
+  <name>
+    <text>0002</text>
+  </name>
+  <questiontext>
+    <text>L'unité de pression utilisée dans le système international et en aéronautique est :</text>
+  </questiontext>
+  <shuffleanswers>false</shuffleanswers>
+  <answer fraction="100">
+    <text>le pascal.</text>
+  </answer>
+  <answer fraction="0">
+    <text>le newton.</text>
+  </answer>
+  <answer fraction="0">
+    <text>le joule.</text>
+  </answer>
+  <answer fraction="0">
+    <text>le millimètre de mercure.</text>
+  </answer>
+</question>"""
+    
+    assert xml_text == expected_xml_text

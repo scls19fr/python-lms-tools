@@ -104,3 +104,37 @@ class GiftQuiz(Quiz):
                 gift_question.append_distractor(GiftDistractor(distractor, value))
             gift_quiz.append(gift_question)
         return gift_quiz
+
+    def to_xml_moodle(self, category='', shuffleanswers=False):
+        from yattag import Doc, indent
+
+        doc, tag, text = Doc().tagtext()
+        doc.asis('<?xml version="1.0" encoding="UTF-8"?>')
+        with tag('quiz'):
+            if category != '':
+                with tag('question', type='category'):
+                    with tag('category'):
+                        with tag('text'):
+                            text(category)
+                        
+        for question in self.iter_questions():
+            with tag('question', type='multichoice'):
+                with tag('name'):
+                    with tag('text'):
+                        text(question.name)
+                with tag('questiontext'):
+                    with tag('text'):
+                        text(question.stem)
+                with tag('shuffleanswers'):
+                    text(str(shuffleanswers).lower())
+                for distractor in question.iter_distractors():
+                    value_pct = distractor.value * 100
+                    if value_pct == 100.0:
+                        value_pct = 100
+                    elif value_pct == 0.0:
+                        value_pct = 0
+                    with tag('answer', fraction=value_pct):
+                        with tag('text'):
+                            text(distractor.text)
+                
+        return indent(doc.getvalue())
