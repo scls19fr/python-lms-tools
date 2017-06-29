@@ -116,7 +116,6 @@ class GiftQuiz(Quiz):
                     with tag('category'):
                         with tag('text'):
                             text(category)
-                        
         for question in self.iter_questions():
             with tag('question', type='multichoice'):
                 with tag('name'):
@@ -136,5 +135,4 @@ class GiftQuiz(Quiz):
                     with tag('answer', fraction=value_pct):
                         with tag('text'):
                             text(distractor.text)
-                
         return indent(doc.getvalue())

@@ -217,6 +217,7 @@ def test_gift_quiz_join():
     assert len(quiz_result) == 4
     assert quiz_result.to_string() == expected_text
 
+
 def test_to_xml():
     quiz = GiftQuiz()
     q = GiftQuestion("L'appareil servant à mesurer la vitesse du vent au sol s'appelle :", name="0001", comment="question: 1 name: 0001")
@@ -236,7 +237,7 @@ def test_to_xml():
     assert len(quiz) == 2
 
     xml_text = quiz.to_xml_moodle(category='$module$/Défaut pour BIA 2016 Météorologie et aérologie')
-    
+
     expected_xml_text = """<?xml version="1.0" encoding="UTF-8"?>
 <quiz>
   <question type="category">
@@ -287,5 +288,5 @@ def test_to_xml():
     <text>le millimètre de mercure.</text>
   </answer>
 </question>"""
-    
+
     assert xml_text == expected_xml_text
