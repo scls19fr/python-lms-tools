@@ -4,7 +4,7 @@ from .formatter import DefaultGiftQuizFormatter, DefaultGiftQuestionFormatter
 
 
 class GiftDistractor():
-    def __init__(self, text, value, feedback=""):
+    def __init__(self, text, value=0, feedback=""):
         self.text = text
         self.feedback = feedback
         self.value = value
@@ -23,7 +23,8 @@ class GiftQuestion(Question):
         self._default_formatter = DefaultGiftQuestionFormatter()
 
     def append_distractor(self, distractor):
-        assert isinstance(distractor, GiftDistractor)
+        if not isinstance(distractor, GiftDistractor):
+            distractor = GiftDistractor(distractor)
         self.distractors.append(distractor)
 
     @property
@@ -43,11 +44,17 @@ class GiftQuestion(Question):
                 return False
         return True
 
+    def set_correct_answer(self, answer, value=1):
+        self.distractors[answer].value = value
+
     def is_correct_answer(self, answer):
         return self.distractors[answer].value == self.sum_values
 
     def is_partially_correct_answer(self, answer):
         return self.distractors[answer].value > 0
+
+    def is_incorrect_answer(self, answer):
+        return self.distractors[answer].value <= 0
 
     @classmethod
     def from_aiken(cls, aiken_question):

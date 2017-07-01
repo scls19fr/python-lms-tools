@@ -9,8 +9,10 @@ def test_gift_question_to_string():
     q.append_distractor(GiftDistractor("un baromètre.", 0))
     q.append_distractor(GiftDistractor("un anémomètre.", 1))
     assert q.is_binary()
-    assert q.is_correct_answer(3)
     assert not q.is_correct_answer(0)
+    assert not q.is_correct_answer(1)
+    assert not q.is_correct_answer(2)
+    assert q.is_correct_answer(3)
     expected_gift_text = """// question: 1 name: 0001
 ::0001::L'appareil servant à mesurer la vitesse du vent au sol s'appelle \:{
 \t~une girouette.
@@ -19,6 +21,19 @@ def test_gift_question_to_string():
 \t=un anémomètre.
 }"""
     assert q.to_string() == expected_gift_text
+
+
+def test_gift_question_to_string():
+    q = GiftQuestion("L'appareil servant à mesurer la vitesse du vent au sol s'appelle :", name="0001", comment="question: 1 name: 0001")
+    q.append_distractor("une girouette.")
+    q.append_distractor("une rose des vents.")
+    q.append_distractor("un baromètre.")
+    q.append_distractor("un anémomètre.")
+    q.set_correct_answer(3)
+    assert not q.is_correct_answer(0)
+    assert not q.is_correct_answer(1)
+    assert not q.is_correct_answer(2)
+    assert q.is_correct_answer(3)
 
 
 def test_gift_question_not_is_binary():
@@ -45,6 +60,23 @@ def test_gift_question_not_is_binary():
 \t~0%Mauvaise réponse
 }"""
     assert q.to_string() == expected_gift_text
+
+
+def test_gift_question_not_is_binary():
+    q = GiftQuestion("Question", name="0001", comment="question: 1 name: 0001")
+    q.append_distractor("Bonne réponse")
+    q.append_distractor("Bonne réponse")
+    q.append_distractor("Bonne réponse")
+    q.append_distractor("Mauvaise réponse")
+    q.append_distractor("Mauvaise réponse")
+    q.set_correct_answer(0)
+    q.set_correct_answer(1)
+    q.set_correct_answer(2)
+    assert q.is_partially_correct_answer(0)
+    assert q.is_partially_correct_answer(1)
+    assert q.is_partially_correct_answer(2)
+    assert q.is_incorrect_answer(3)
+    assert q.is_incorrect_answer(4)
 
 
 def test_gift_quiz():
