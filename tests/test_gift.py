@@ -23,7 +23,7 @@ def test_gift_question_to_string():
     assert q.to_string() == expected_gift_text
 
 
-def test_gift_question_to_string():
+def test_gift_question_set_correct_answer_binary():
     q = GiftQuestion("L'appareil servant à mesurer la vitesse du vent au sol s'appelle :", name="0001", comment="question: 1 name: 0001")
     q.append_distractor("une girouette.")
     q.append_distractor("une rose des vents.")
@@ -62,7 +62,7 @@ def test_gift_question_not_is_binary():
     assert q.to_string() == expected_gift_text
 
 
-def test_gift_question_not_is_binary():
+def test_gift_question_set_correct_answer_not_binary():
     q = GiftQuestion("Question", name="0001", comment="question: 1 name: 0001")
     q.append_distractor("Bonne réponse")
     q.append_distractor("Bonne réponse")
