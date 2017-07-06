@@ -21,7 +21,7 @@ class DefaultGiftQuestionFormatter(GiftQuestionFormatter):
                     c = CORRECT_ANSWER_CHAR
                 else:
                     c = WRONG_ANSWER_CHAR
-                s += "\n\t%s%s" % (c, distractor.text)
+                s += "\n\t%s%s" % (c, _cleanup(distractor.text))
             else:
                 val_pct = distractor.value / sum_values * 100.0
                 if val_pct != 0:

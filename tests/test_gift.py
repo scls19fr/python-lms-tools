@@ -36,6 +36,23 @@ def test_gift_question_set_correct_answer_binary():
     assert q.is_correct_answer(3)
 
 
+def test_gift_question_to_string_with_escaped_char():
+    q = GiftQuestion("Identifier les éléments 1, 2 et 3 de la structure :", name="0001", comment="question: 1 name: 0001")
+    q.append_distractor("1 = nervure, 2 = couple, 3 = lisse.")
+    q.append_distractor("1 = longeron, 2 = nervure, 3 = entretoise.")
+    q.append_distractor("1 = poutre, 2 = traverse, 3 = semelle.")
+    q.append_distractor("1 = couple, 2 = entretoise, 3 = traverse.")
+    q.set_correct_answer(1)
+    expected_gift_text = """// question: 1 name: 0001
+::0001::Identifier les éléments 1, 2 et 3 de la structure \:{
+\t~1 \= nervure, 2 \= couple, 3 \= lisse.
+\t=1 \= longeron, 2 \= nervure, 3 \= entretoise.
+\t~1 \= poutre, 2 \= traverse, 3 \= semelle.
+\t~1 \= couple, 2 \= entretoise, 3 \= traverse.
+}"""
+    assert q.to_string() == expected_gift_text
+
+
 def test_gift_question_not_is_binary():
     q = GiftQuestion("Question", name="0001", comment="question: 1 name: 0001")
     q.append_distractor(GiftDistractor("Bonne réponse", 1))
