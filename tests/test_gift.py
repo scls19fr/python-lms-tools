@@ -267,6 +267,32 @@ def test_gift_quiz_join():
     assert quiz_result.to_string() == expected_text
 
 
+def test_gift_parse():
+    gift_text = """// question: 1 name: 0001
+::0001::L'appareil servant à mesurer la vitesse du vent au sol s'appelle \:{
+\t~une girouette.
+\t~une rose des vents.
+\t~un baromètre.
+\t=un anémomètre.
+}
+
+// question: 2 name: 0002
+::0002::L'unité de pression utilisée dans le système international et en aéronautique est \:{
+\t=le pascal.
+\t~le newton.
+\t~le joule.
+\t~le millimètre de mercure.
+}"""
+    quiz = GiftQuiz.parse(gift_text)
+    assert len(quiz) == 2
+    q = quiz._lst_questions[0]
+    assert len(q) == 4
+    assert q.is_correct_answer(3)
+    q = quiz._lst_questions[1]
+    assert len(q) == 4
+    assert q.is_correct_answer(0)    
+
+
 def test_to_xml():
     quiz = GiftQuiz()
     q = GiftQuestion("L'appareil servant à mesurer la vitesse du vent au sol s'appelle :", name="0001", comment="question: 1 name: 0001")

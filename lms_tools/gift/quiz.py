@@ -1,6 +1,10 @@
 from ..base import Quiz, Question
 from .formatter import DefaultGiftQuizFormatter, DefaultGiftQuestionFormatter
-# from .distractor import DefaultDistractorKeyParser
+from ..exception import ParseException
+from ._utils import (GiftParserState, COMMENT_PATTERN, STEM_PATTERN,
+                     DISTRACTORS_PATTERN, END_OF_QUESTION_PATTERN)
+
+import re
 
 
 class GiftDistractor():
@@ -21,6 +25,12 @@ class GiftQuestion(Question):
         self.distractors = distractors
         self.comment = comment
         self._default_formatter = DefaultGiftQuestionFormatter()
+
+    def append_stem(self, line):
+        if self.stem == "":
+            self.stem = line
+        else:
+            self.stem = self.stem + "\n" + line
 
     def append_distractor(self, distractor):
         if not isinstance(distractor, GiftDistractor):
@@ -68,6 +78,12 @@ class GiftQuestion(Question):
             gift_question.append_distractor(GiftDistractor(distractor, value))
         return gift_question
 
+    @classmethod
+    def parse(cls, s):
+        quiz = GiftQuiz.parse(s)
+        assert len(quiz) == 1, ParseException("quiz doesn't have only one question")
+        return quiz._lst_questions[0]
+
 
 class GiftQuiz(Quiz):
     def __init__(self, questions=None):
@@ -111,6 +127,81 @@ class GiftQuiz(Quiz):
                 gift_question.append_distractor(GiftDistractor(distractor, value))
             gift_quiz.append(gift_question)
         return gift_quiz
+
+    @classmethod
+    def parse(cls, s):
+        def is_comment(line):
+            return re.match(COMMENT_PATTERN, line) is not None
+
+        def is_empty(line):
+            return line == ""
+
+        def is_stem(line):
+            return re.match(STEM_PATTERN, line) is not None
+
+        def split_stem(line):
+            name, stem = re.findall(STEM_PATTERN, line)[0]
+            return name, stem
+
+        def is_distractor(line):
+            return re.match(DISTRACTORS_PATTERN, line) is not None
+
+        def split_distractor(line):
+            key, distractor = re.findall(DISTRACTORS_PATTERN, line)[0]
+            # ToDo feedback
+            return key, distractor
+
+        def is_end_of_question(line):
+            return re.match(END_OF_QUESTION_PATTERN, line) is not None
+
+        def before_end_of_question(line):
+            return re.findall(END_OF_QUESTION_PATTERN, line)[0]
+
+        state = GiftParserState.START
+        quiz = GiftQuiz()
+        for line in s.splitlines():
+            print(state)
+            print(">"*3 + " " + line)
+            
+            if is_comment(line) or is_empty(line):
+                print("0"*10)
+                continue
+
+            if state in [GiftParserState.START, GiftParserState.END_OF_QUESTION]:
+                if is_stem(line):
+                    name, stem = split_stem(line)
+                    q = GiftQuestion(stem, name=name)
+                    state = GiftParserState.STEM
+                    print("1"*10)
+                else:
+                    raise ParseException("Line %r should be a stem" % line)
+            elif state in [GiftParserState.STEM, GiftParserState.DISTRACTORS]:
+                if not (is_distractor(line) or is_end_of_question(line)):
+                    q.append_stem(line)
+                else:
+                    if is_end_of_question(line):
+                        pre_line = before_end_of_question(line)  # noqa
+                        # process pre_line
+                        state = GiftParserState.END_OF_QUESTION
+                        quiz.append(q)
+                        print("3"*10)
+                    elif is_distractor(line):
+                        print("2"*10)
+                        key, distractor = split_distractor(line)
+                        if key == "=":
+                            value = 1
+                        elif key == "~":
+                            value = 0
+                        else:
+                            # ToDo: get value
+                            raise NotImplementedError("unsupported distractor value %r" % line)                        
+                        q.append_distractor(GiftDistractor(distractor, value))
+                        state = GiftParserState.DISTRACTORS
+                    else:
+                        raise ParseException("Line %r should be a distractor" % line)
+            else:
+                raise ParseException("Unknown state %s" % state)
+        return quiz
 
     def to_xml(self, *args, **kwargs):
         return self.to_xml_moodle(*args, **kwargs)

@@ -1,5 +1,5 @@
 from ..formatter import QuestionFormatter, QuizFormatter
-from ._utils import _cleanup, CORRECT_ANSWER_CHAR, WRONG_ANSWER_CHAR
+from ._utils import _escape_special_chars, CORRECT_ANSWER_CHAR, WRONG_ANSWER_CHAR
 
 
 class GiftQuestionFormatter(QuestionFormatter):
@@ -12,7 +12,7 @@ class DefaultGiftQuestionFormatter(GiftQuestionFormatter):
             s = "/// %s" % question.comment
         else:
             s = ""
-        s += "\n" + "::%s::%s{" % (_cleanup(question.name), _cleanup(question.stem))
+        s += "\n" + "::%s::%s{" % (_escape_special_chars(question.name), _escape_special_chars(question.stem))
         is_bin = question.is_binary()
         sum_values = question.sum_values
         for i, distractor in enumerate(question.iter_distractors()):
@@ -21,7 +21,7 @@ class DefaultGiftQuestionFormatter(GiftQuestionFormatter):
                     c = CORRECT_ANSWER_CHAR
                 else:
                     c = WRONG_ANSWER_CHAR
-                s += "\n\t%s%s" % (c, _cleanup(distractor.text))
+                s += "\n\t%s%s" % (c, _escape_special_chars(distractor.text))
             else:
                 val_pct = distractor.value / sum_values * 100.0
                 if val_pct != 0:
