@@ -290,7 +290,7 @@ def test_gift_parse():
     assert q.is_correct_answer(3)
     q = quiz._lst_questions[1]
     assert len(q) == 4
-    assert q.is_correct_answer(0)    
+    assert q.is_correct_answer(0)
 
 
 def test_to_xml():

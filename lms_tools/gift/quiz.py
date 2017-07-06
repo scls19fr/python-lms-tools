@@ -161,10 +161,7 @@ class GiftQuiz(Quiz):
         quiz = GiftQuiz()
         for line in s.splitlines():
             print(state)
-            print(">"*3 + " " + line)
-            
             if is_comment(line) or is_empty(line):
-                print("0"*10)
                 continue
 
             if state in [GiftParserState.START, GiftParserState.END_OF_QUESTION]:
@@ -172,7 +169,6 @@ class GiftQuiz(Quiz):
                     name, stem = split_stem(line)
                     q = GiftQuestion(stem, name=name)
                     state = GiftParserState.STEM
-                    print("1"*10)
                 else:
                     raise ParseException("Line %r should be a stem" % line)
             elif state in [GiftParserState.STEM, GiftParserState.DISTRACTORS]:
@@ -184,9 +180,7 @@ class GiftQuiz(Quiz):
                         # process pre_line
                         state = GiftParserState.END_OF_QUESTION
                         quiz.append(q)
-                        print("3"*10)
                     elif is_distractor(line):
-                        print("2"*10)
                         key, distractor = split_distractor(line)
                         if key == "=":
                             value = 1
@@ -194,7 +188,7 @@ class GiftQuiz(Quiz):
                             value = 0
                         else:
                             # ToDo: get value
-                            raise NotImplementedError("unsupported distractor value %r" % line)                        
+                            raise NotImplementedError("unsupported distractor value %r" % line)
                         q.append_distractor(GiftDistractor(distractor, value))
                         state = GiftParserState.DISTRACTORS
                     else:
