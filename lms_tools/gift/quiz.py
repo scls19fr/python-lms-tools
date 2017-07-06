@@ -160,7 +160,6 @@ class GiftQuiz(Quiz):
         state = GiftParserState.START
         quiz = GiftQuiz()
         for line in s.splitlines():
-            print(state)
             if is_comment(line) or is_empty(line):
                 continue
 
