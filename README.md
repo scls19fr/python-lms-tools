@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/scls19fr/python-lms-tools.svg?branch=master)](https://travis-ci.org/scls19fr/python-lms-tools)
+[![Build Status](https://travis-ci.com/scls19fr/python-lms-tools.svg?branch=master)](https://travis-ci.com/scls19fr/python-lms-tools)
 [![Code Health](https://landscape.io/github/scls19fr/python-lms-tools/master/landscape.svg?style=flat)](https://landscape.io/github/scls19fr/python-lms-tools/master)
 
 # python-lms-tools
