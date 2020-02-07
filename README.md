@@ -4,6 +4,8 @@
 # python-lms-tools
 Python library to manage quiz formats used by differents Learning management system (LMS) especially Moodle.
 
-Currently there is only support for [Aiken format](https://docs.moodle.org/33/en/Aiken_format).
+The following formats are (at least partially) supported:
+- [Aiken format](https://docs.moodle.org/33/en/Aiken_format)
+- [GIFT format](https://docs.moodle.org/2x/fr/Format_GIFT)
 
 Supporting more formats [may be considered](https://github.com/scls19fr/python-lms-tools/issues/7).
