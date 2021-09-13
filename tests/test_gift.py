@@ -14,7 +14,7 @@ def test_gift_question_to_string():
     assert not q.is_correct_answer(2)
     assert q.is_correct_answer(3)
     expected_gift_text = """// question: 1 name: 0001
-::0001::L'appareil servant à mesurer la vitesse du vent au sol s'appelle \:{
+::0001::L'appareil servant à mesurer la vitesse du vent au sol s'appelle \\:{
 \t~une girouette.
 \t~une rose des vents.
 \t~un baromètre.
@@ -44,11 +44,11 @@ def test_gift_question_to_string_with_escaped_char():
     q.append_distractor("1 = couple, 2 = entretoise, 3 = traverse.")
     q.set_correct_answer(1)
     expected_gift_text = """// question: 1 name: 0001
-::0001::Identifier les éléments 1, 2 et 3 de la structure \:{
-\t~1 \= nervure, 2 \= couple, 3 \= lisse.
-\t=1 \= longeron, 2 \= nervure, 3 \= entretoise.
-\t~1 \= poutre, 2 \= traverse, 3 \= semelle.
-\t~1 \= couple, 2 \= entretoise, 3 \= traverse.
+::0001::Identifier les éléments 1, 2 et 3 de la structure \\:{
+\t~1 \\= nervure, 2 \\= couple, 3 \\= lisse.
+\t=1 \\= longeron, 2 \\= nervure, 3 \\= entretoise.
+\t~1 \\= poutre, 2 \\= traverse, 3 \\= semelle.
+\t~1 \\= couple, 2 \\= entretoise, 3 \\= traverse.
 }"""
     assert q.to_string() == expected_gift_text
 
@@ -125,7 +125,7 @@ $CATEGORY: $module$/Défaut pour BIA 2016 Météorologie et aérologie
 $CATEGORY: $module$/Défaut pour BIA 2016 Météorologie et aérologie
 
 // question: 1 name: 0001
-::0001::L'appareil servant à mesurer la vitesse du vent au sol s'appelle \:{
+::0001::L'appareil servant à mesurer la vitesse du vent au sol s'appelle \\:{
 \t~une girouette.
 \t~une rose des vents.
 \t~un baromètre.
@@ -133,7 +133,7 @@ $CATEGORY: $module$/Défaut pour BIA 2016 Météorologie et aérologie
 }
 
 // question: 2 name: 0002
-::0002::L'unité de pression utilisée dans le système international et en aéronautique est \:{
+::0002::L'unité de pression utilisée dans le système international et en aéronautique est \\:{
 \t=le pascal.
 \t~le newton.
 \t~le joule.
@@ -181,7 +181,7 @@ ANSWER: A"""
         question.name = "%04d" % val
     gift_text = gift_quiz.to_string()
     expected_gift_text = """// question: 1 name: 0001
-::0001::L'appareil servant à mesurer la vitesse du vent au sol s'appelle \:{
+::0001::L'appareil servant à mesurer la vitesse du vent au sol s'appelle \\:{
 \t~une girouette.
 \t~une rose des vents.
 \t~un baromètre.
@@ -189,7 +189,7 @@ ANSWER: A"""
 }
 
 // question: 2 name: 0002
-::0002::L'unité de pression utilisée dans le système international et en aéronautique est \:{
+::0002::L'unité de pression utilisée dans le système international et en aéronautique est \\:{
 \t=le pascal.
 \t~le newton.
 \t~le joule.
@@ -233,7 +233,7 @@ def test_gift_quiz_join():
     quiz_result = GiftQuiz.join([quiz1, quiz2])
 
     expected_text = """// question: 1 name: 0001
-::0001::L'appareil servant à mesurer la vitesse du vent au sol s'appelle \:{
+::0001::L'appareil servant à mesurer la vitesse du vent au sol s'appelle \\:{
 \t~une girouette.
 \t~une rose des vents.
 \t~un baromètre.
@@ -241,7 +241,7 @@ def test_gift_quiz_join():
 }
 
 // question: 2 name: 0002
-::0002::L'unité de pression utilisée dans le système international et en aéronautique est \:{
+::0002::L'unité de pression utilisée dans le système international et en aéronautique est \\:{
 \t=le pascal.
 \t~le newton.
 \t~le joule.
@@ -249,7 +249,7 @@ def test_gift_quiz_join():
 }
 
 // question: 3 name: 0003
-::0003::En vol en palier stabilisé \:{
+::0003::En vol en palier stabilisé \\:{
 \t=la portance équilibre le poids.
 \t~la portance équilibre la traînée.
 \t~la portance équilibre la résultante aérodynamique.
@@ -257,7 +257,7 @@ def test_gift_quiz_join():
 }
 
 // question: 4 name: 0004
-::0004::Le vent relatif \:{
+::0004::Le vent relatif \\:{
 \t~est la composante du vent réel parallèle à la trajectoire.
 \t~est parallèle à la trajectoire, et de même sens que le déplacement de l'avion.
 \t=est parallèle à la trajectoire, mais de sens opposé au déplacement de l'avion.
@@ -269,7 +269,7 @@ def test_gift_quiz_join():
 
 def test_gift_parse():
     gift_text = """// question: 1 name: 0001
-::0001::L'appareil servant à mesurer la vitesse du vent au sol s'appelle \:{
+::0001::L'appareil servant à mesurer la vitesse du vent au sol s'appelle \\:{
 \t~une girouette.
 \t~une rose des vents.
 \t~un baromètre.
@@ -277,7 +277,7 @@ def test_gift_parse():
 }
 
 // question: 2 name: 0002
-::0002::L'unité de pression utilisée dans le système international et en aéronautique est \:{
+::0002::L'unité de pression utilisée dans le système international et en aéronautique est \\:{
 \t=le pascal.
 \t~le newton.
 \t~le joule.
@@ -296,7 +296,7 @@ def test_gift_parse():
 def test_gift_parse_no_correct_answer():
     """Fix issue where a ZeroDivisionError: float division by zero was raised"""
     gift_text = """// question: 1 name: 0001
-::0001::L'appareil servant à mesurer la vitesse du vent au sol s'appelle \:{
+::0001::L'appareil servant à mesurer la vitesse du vent au sol s'appelle \\:{
 \t~une girouette.
 \t~une rose des vents.
 \t~un baromètre.
@@ -304,7 +304,7 @@ def test_gift_parse_no_correct_answer():
 }
 
 // question: 2 name: 0002
-::0002::L'unité de pression utilisée dans le système international et en aéronautique est \:{
+::0002::L'unité de pression utilisée dans le système international et en aéronautique est \\:{
 \t~le pascal.
 \t~le newton.
 \t~le joule.
@@ -415,3 +415,18 @@ def test_to_xml():
 </question>"""
 
     assert xml_text == expected_xml_text
+
+def test_escape_semi_colon():
+  gift_text = """::30037::Pour indiquer une phase de détresse, vous affichez sur le transpondeur le code \\:{
+    ~7000
+    =7700
+    ~7500
+    ~7600.
+  }"""
+  quiz = GiftQuiz.parse(gift_text)
+  assert len(quiz) == 1
+  q = quiz._lst_questions[0]
+  assert len(q) == 4
+  expected = "Pour indiquer une phase de détresse, vous affichez sur le transpondeur le code :"
+  expected = expected[-10:]
+  #assert q.stem[-10:] == expected

@@ -157,6 +157,9 @@ class GiftQuiz(Quiz):
 
         def before_end_of_question(line):
             return re.findall(END_OF_QUESTION_PATTERN, line)[0]
+        
+        def replace_escaped_chars(line):
+            return line.replace('\:', ':')
 
         state = GiftParserState.START
         quiz = GiftQuiz()
@@ -167,6 +170,7 @@ class GiftQuiz(Quiz):
             if state in [GiftParserState.START, GiftParserState.END_OF_QUESTION]:
                 if is_stem(line):
                     name, stem = split_stem(line)
+                    stem = replace_escaped_chars(stem)                    
                     q = GiftQuestion(stem, name=name)
                     state = GiftParserState.STEM
                 else:
