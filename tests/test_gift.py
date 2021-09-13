@@ -317,6 +317,31 @@ def test_gift_parse_no_correct_answer():
     q = quiz._lst_questions[1]
     assert len(q) == 4
 
+def test_gift_parse_no_distractor_symbol():
+    """Parse even if no distractor symbols (ie no correct answer given)"""
+    gift_text = """// question: 1 name: 0001
+::0001::L'appareil servant à mesurer la vitesse du vent au sol s'appelle {
+\tune girouette.
+\tune rose des vents.
+\tun baromètre.
+\tun anémomètre.
+}
+
+// question: 2 name: 0002
+::0002::L'unité de pression utilisée dans le système international et en aéronautique est {
+\tle pascal.
+\tle newton.
+\tle joule.
+\tle millimètre de mercure.
+}"""
+    #ToFix
+    #quiz = GiftQuiz.parse(gift_text)
+    #assert len(quiz) == 2
+    #q = quiz._lst_questions[0]
+    #assert len(q) == 4
+    #q = quiz._lst_questions[1]
+    #assert len(q) == 4
+
 
 def test_to_xml():
     quiz = GiftQuiz()
