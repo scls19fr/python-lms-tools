@@ -45,8 +45,9 @@ class GiftQuestion(Question):
         return result
 
     def normalize_values(self):
-        for distractor in self.iter_distractors():
-            distractor.value = float(distractor.value) / self.sum_values
+        if self.sum_values != 0:
+            for distractor in self.iter_distractors():
+                distractor.value = float(distractor.value) / self.sum_values
 
     def is_binary(self):
         for distractor in self.iter_distractors():
