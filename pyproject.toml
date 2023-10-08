@@ -5,7 +5,7 @@ description = ""
 authors = ["scls19fr <s.celles@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "python_lms_tools"}]
+#packages = [{include = "python_lms_tools"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
